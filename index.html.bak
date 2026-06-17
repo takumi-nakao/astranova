@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstraNova | Professional Esports Team</title>
+  <meta name="description" content="AstraNovaは世界に挑戦するプロフェッショナルeスポーツチームです。Apex LegendsやVALORANT部門を擁し、最高峰の競技力と次世代のブランディングを追求します。">
+  
+  <!-- Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Cloudflare Turnstile Script (CSP allowed, deferred loading) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+  <!-- GSAP CDN for Sci-Fi Intro Animations -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- 1. Custom Mouse Follower -->
+  <div id="custom-cursor" class="custom-cursor"></div>
+
+  <!-- 1.5. Glitch Transition Overlay for Theme Switch -->
+  <div id="theme-glitch-overlay" class="theme-glitch-overlay"></div>
+
+  <!-- 2. Scroll Progress Bar -->
+  <div id="scroll-progress" class="scroll-progress"></div>
+
+  <!-- 3. Immersive Sci-Fi GSAP Loader (ASTRANOVA Deploy Sequence) -->
+  <div id="loader" class="loader">
+    <div class="loader-scanline"></div>
+    <div class="loader-noise"></div>
+    
+    <div class="loader-content-wrapper">
+      <div class="loader-logo-container">
+        <h1 class="loader-logo-text" id="loader-logo-text" data-text="ASTRANOVA">ASTRANOVA</h1>
+      </div>
+      
+      <div class="loader-status-container">
+        <span class="loader-cursor-line">&gt; </span>
+        <span class="loader-status-text" id="loader-status-text">INITIALIZING...</span>
+        <span class="loader-cursor" id="loader-cursor">_</span>
+      </div>
+      
+      <div class="loader-progress-bar-container">
+        <div class="loader-progress-bar" id="loader-progress-bar"></div>
+      </div>
+      
+      <div class="loader-percentage" id="loader-percentage">0%</div>
+    </div>
+    
+    <div class="intro-skip-hint" id="intro-skip-hint">PRESS ESC OR CLICK TO SKIP</div>
+  </div>
+
+  <!-- 4. Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#hero" class="brand-logo" aria-label="AstraNova Home">
+        <svg viewBox="0 0 100 100" class="logo-svg">
+          <path d="M50 15L50 85" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M15 50L85 50" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M28 28L72 72" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M28 72L72 28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="10" fill="currentColor"/>
+        </svg>
+        <span class="brand-name">AstraNova</span>
+      </a>
+      
+      <div class="header-actions">
+        <nav class="desktop-nav" aria-label="Main Navigation">
+          <ul class="nav-list">
+            <li><a href="#about" class="nav-link">ABOUT</a></li>
+            <li><a href="#members" class="nav-link">MEMBERS</a></li>
+            <li><a href="#achievements" class="nav-link">ACHIEVEMENTS</a></li>
+            <li><a href="#gallery" class="nav-link">GALLERY</a></li>
+            <li><a href="#sponsors" class="nav-link">SPONSORS</a></li>
+            <li><a href="#contact" class="nav-link nav-btn-outline">APPLY</a></li>
+          </ul>
+        </nav>
+        
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="テーマを切り替える">
+          <svg class="theme-toggle-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <path class="moon-icon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"></path>
+            <circle class="sun-icon" cx="12" cy="12" r="5" fill="currentColor"></circle>
+            <line class="sun-icon" x1="12" y1="1" x2="12" y2="3"></line>
+            <line class="sun-icon" x1="12" y1="21" x2="12" y2="23"></line>
+            <line class="sun-icon" x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line class="sun-icon" x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line class="sun-icon" x1="1" y1="12" x2="3" y2="12"></line>
+            <line class="sun-icon" x1="21" y1="12" x2="23" y2="12"></line>
+            <line class="sun-icon" x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line class="sun-icon" x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Hamburger Menu Toggle Button -->
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="メニューを開閉する">
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5. Fullscreen Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" id="mobile-nav" aria-hidden="true">
+    <nav class="mobile-nav-container">
+      <ul class="mobile-nav-list">
+        <li><a href="#about" class="mobile-nav-link">ABOUT</a></li>
+        <li><a href="#members" class="mobile-nav-link">MEMBERS</a></li>
+        <li><a href="#achievements" class="mobile-nav-link">ACHIEVEMENTS</a></li>
+        <li><a href="#gallery" class="mobile-nav-link">GALLERY</a></li>
+        <li><a href="#sponsors" class="mobile-nav-link">SPONSORS</a></li>
+        <li><a href="#contact" class="mobile-nav-link">APPLY</a></li>
+      </ul>
+      <div class="mobile-nav-footer">
+        <p>© 2026 AstraNova. ALL RIGHTS RESERVED.</p>
+      </div>
+    </nav>
+  </div>
+
+  <main>
+    <!-- 6. Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="hero-parallax-bg" id="hero-bg">
+        <div class="hero-bg-slide active" style="background-image: url('assets/fv_RCSFL26_1.png');"></div>
+        <div class="hero-bg-slide" style="background-image: url('assets/fv_RCSFL26_2.png');"></div>
+        <div class="hero-bg-slide" style="background-image: url('assets/fv_RCSFL26_3.png');"></div>
+        <div class="hero-bg-slide" style="background-image: url('assets/fv_RCSFL26_4.png');"></div>
+        <div class="hero-bg-slide" style="background-image: url('assets/fv_RCSFL26_5.png');"></div>
+      </div>
+      <div class="hero-grid-overlay"></div>
+      
+      <div class="hero-content">
+        <div class="hero-tagline reveal reveal-fade">REACH FOR THE STARS</div>
+        <!-- チームロゴ画像追加 -->
+        <div class="hero-logo-wrapper reveal reveal-fade">
+          <img src="assets/logo.png" alt="AstraNova Logo" class="hero-logo-img">
+        </div>
+        <h1 class="hero-title reveal reveal-up">ASTRANOVA</h1>
+        <p class="hero-description reveal reveal-up">
+          AstraNova is a premier e-sports organization redefining the digital scene through elite tactics, absolute synergy, and next-generation branding.
+        </p>
+        <div class="hero-cta reveal reveal-up">
+          <a href="#contact" class="btn btn-primary">JOIN THE ROSTER</a>
+          <a href="#about" class="btn btn-secondary">DISCOVER MORE</a>
+        </div>
+      </div>
+
+      <!-- Animated Scroll Indicator -->
+      <div class="scroll-indicator" aria-hidden="true">
+        <div class="mouse-icon">
+          <span class="mouse-wheel"></span>
+        </div>
+        <span class="scroll-text">SCROLL</span>
+      </div>
+    </section>
+
+    <!-- 7. About Team Section -->
+    <section id="about" class="about-section">
+      <div class="section-container">
+        <div class="grid-layout">
+          <div class="col-left reveal reveal-up">
+            <span class="section-subtitle">ABOUT US</span>
+            <h2 class="section-title">THE NEW ERA OF ESPORTS</h2>
+          </div>
+          <div class="col-right reveal reveal-up">
+            <p class="lead-text">
+              AstraNovaは、Apex LegendsおよびVALORANTをはじめとする競技シーンにおいて、最前線で勝利を掴み取るために設立されたエリートeスポーツクランです。
+            </p>
+            <p class="body-text">
+              私たちは単なるゲームの勝者にとどまらず、カルチャー、クリエイティビティ、そして先端セキュリティ技術とシームレスなデジタル体験を融合させた、唯一無二のブランドエコシステムを構築します。プレイヤー個人のポテンシャルを極限まで引き出し、スポンサー企業と共に新時代のエンターテインメントを共創します。
+            </p>
+            
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-num">02</span>
+                <span class="stat-label">ACTIVE DIVISIONS</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-num">15+</span>
+                <span class="stat-label">CHAMPIONSHIPS</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-num">5M+</span>
+                <span class="stat-label">TOTAL FANBASE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Members Section -->
+    <section id="members" class="members-section">
+      <div class="section-container">
+        <div class="section-header reveal reveal-up">
+          <span class="section-subtitle">TEAM ROSTER</span>
+          <h2 class="section-title">AstraNova CREW</h2>
+        </div>
+
+        <!-- Roster Section Header (Apex Division) -->
+        <h3 class="roster-division-title reveal reveal-up">APEX LEGENDS DIVISION</h3>
+        <div class="members-grid division-grid">
+          
+          <!-- 選手 1 (IGL) -->
+          <!-- メンバーを追加する場合は、以下の member-card ブロックをコピーして編集してください -->
+          <div class="member-card reveal reveal-up">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-1">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <defs>
+                    <linearGradient id="gradient-card-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#00f3ff" stop-opacity="0.2"/>
+                      <stop offset="100%" stop-color="#8f00ff" stop-opacity="0.05"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#00f3ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#00f3ff" text-anchor="middle" letter-spacing="2">APEX DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitch">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">IN-GAME LEADER</span>
+              <h3 class="member-name">REON</h3>
+              <span class="member-team">APEX LEGENDS</span>
+            </div>
+          </div>
+
+          <!-- 選手 2 (Sniper) -->
+          <div class="member-card reveal reveal-up" style="transition-delay: 0.1s;">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-3">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#00f3ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#00f3ff" text-anchor="middle" letter-spacing="2">APEX DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">MAIN SNIPER</span>
+              <h3 class="member-name">NEO</h3>
+              <span class="member-team">APEX LEGENDS</span>
+            </div>
+          </div>
+
+          <!-- 選手 3 (Slayer) -->
+          <div class="member-card reveal reveal-up" style="transition-delay: 0.2s;">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-5">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#00f3ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#00f3ff" text-anchor="middle" letter-spacing="2">APEX DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitch">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">MAIN SLAYER</span>
+              <h3 class="member-name">TSUBASA</h3>
+              <span class="member-team">APEX LEGENDS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Section Header (Valorant Division) -->
+        <h3 class="roster-division-title reveal reveal-up" style="margin-top: 5rem;">VALORANT DIVISION</h3>
+        <div class="members-grid division-grid">
+
+          <!-- 選手 4 (Duelist) -->
+          <div class="member-card reveal reveal-up">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-2">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#8f00ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#8f00ff" text-anchor="middle" letter-spacing="2">VALORANT DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitch">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">ENTRY FRAGGER / DUELIST</span>
+              <h3 class="member-name">K4EL</h3>
+              <span class="member-team">VALORANT</span>
+            </div>
+          </div>
+
+          <!-- 選手 5 (Sentinel) -->
+          <div class="member-card reveal reveal-up" style="transition-delay: 0.1s;">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-4">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#8f00ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#8f00ff" text-anchor="middle" letter-spacing="2">VALORANT DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Twitch">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">STRATEGIST / SENTINEL</span>
+              <h3 class="member-name">LUCIA</h3>
+              <span class="member-team">VALORANT</span>
+            </div>
+          </div>
+
+          <!-- 選手 6 (Initiator) -->
+          <div class="member-card reveal reveal-up" style="transition-delay: 0.2s;">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-6">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#8f00ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#8f00ff" text-anchor="middle" letter-spacing="2">VALORANT DIVISION</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">SUPPORT / INITIATOR</span>
+              <h3 class="member-name">SAYRA</h3>
+              <span class="member-team">VALORANT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Section Header (Staff / Coach) -->
+        <h3 class="roster-division-title reveal reveal-up" style="margin-top: 5rem;">COACH & STAFF</h3>
+        <div class="members-grid division-grid">
+
+          <!-- コーチ 1 (Coach) -->
+          <div class="member-card reveal reveal-up">
+            <div class="member-image-wrapper">
+              <div class="member-image-placeholder member-avatar-7">
+                <svg viewBox="0 0 200 250" class="member-avatar-svg">
+                  <rect width="200" height="250" fill="url(#gradient-card-1)"/>
+                  <path d="M100 60 C125 60 145 80 145 105 C145 130 135 145 100 165 C65 145 55 130 55 105 C55 80 75 60 100 60 Z" fill="#ffffff" opacity="0.1"/>
+                  <path d="M40 220 C40 180 65 170 100 170 C135 170 160 180 160 220" stroke="#00f3ff" stroke-width="2" fill="none"/>
+                  <text x="100" y="240" font-family="'Space Grotesk'" font-size="12" fill="#00f3ff" text-anchor="middle" letter-spacing="2">TACTICAL STAFF</text>
+                </svg>
+              </div>
+              <div class="member-social-overlay">
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="member-info">
+              <span class="member-role">HEAD COACH</span>
+              <h3 class="member-name">C-HAL</h3>
+              <span class="member-team">VALORANT / APEX</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Achievements Section -->
+    <section id="achievements" class="achievements-section">
+      <div class="section-container">
+        <div class="section-header reveal reveal-up">
+          <span class="section-subtitle">OUR LEGACY</span>
+          <h2 class="section-title">ACHIEVEMENTS</h2>
+        </div>
+
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+          
+          <!-- Timeline Item 1 -->
+          <div class="timeline-item reveal reveal-up">
+            <div class="timeline-badge">1st</div>
+            <div class="timeline-content">
+              <div class="timeline-meta">2026.04 | APEX LEGENDS</div>
+              <h3 class="timeline-title">APAC North Pro League Split 1</h3>
+              <p class="timeline-desc">アジア太平洋北部予選を圧倒的な強さで勝ち抜き、総合1位で世界大会への進出を決定しました。</p>
+            </div>
+          </div>
+
+          <!-- Timeline Item 2 -->
+          <div class="timeline-item reveal reveal-up">
+            <div class="timeline-badge">3rd</div>
+            <div class="timeline-content">
+              <div class="timeline-meta">2026.02 | VALORANT</div>
+              <h3 class="timeline-title">VCT Challengers Japan Stage 1</h3>
+              <p class="timeline-desc">国内の競合ひしめくトーナメントにおいて、高度なチーム戦術を展開し総合第3位に入賞。</p>
+            </div>
+          </div>
+
+          <!-- Timeline Item 3 -->
+          <div class="timeline-item reveal reveal-up">
+            <div class="timeline-badge">1st</div>
+            <div class="timeline-content">
+              <div class="timeline-meta">2025.11 | APEX LEGENDS</div>
+              <h3 class="timeline-title">Challenger Circuit Division #3</h3>
+              <p class="timeline-desc">プロリーグへの登竜門となるサーキットを全試合で高キル数を維持し、完全優勝を果たしました。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Gallery Section -->
+    <section id="gallery" class="gallery-section">
+      <div class="section-container">
+        <div class="section-header reveal reveal-up">
+          <span class="section-subtitle">VISUAL HIGHLIGHTS</span>
+          <h2 class="section-title">TEAM GALLERY</h2>
+        </div>
+
+        <div class="gallery-grid">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-card reveal reveal-up">
+            <div class="gallery-img-container">
+              <svg viewBox="0 0 300 200" class="gallery-svg" data-large-svg="svg-1" aria-label="APEX 大会ステージ">
+                <rect width="100%" height="100%" fill="#0a0a0a"/>
+                <circle cx="150" cy="100" r="80" fill="url(#gradient-card-1)"/>
+                <path d="M120 80L180 120L120 160Z" fill="#00f3ff" opacity="0.3"/>
+                <text x="50%" y="90%" fill="#fff" font-size="10" text-anchor="middle" font-family="'Space Grotesk'">APEX CHAMPIONSHIP 2026</text>
+              </svg>
+              <div class="gallery-overlay">
+                <span class="gallery-zoom-icon">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gallery Item 2 -->
+          <div class="gallery-card reveal reveal-up" style="transition-delay: 0.1s;">
+            <div class="gallery-img-container">
+              <svg viewBox="0 0 300 200" class="gallery-svg" data-large-svg="svg-2" aria-label="VALORANT ブース">
+                <rect width="100%" height="100%" fill="#0a0a0a"/>
+                <circle cx="150" cy="100" r="80" fill="url(#gradient-card-1)"/>
+                <rect x="110" y="80" width="80" height="40" rx="4" stroke="#8f00ff" stroke-width="2" fill="none" opacity="0.4"/>
+                <text x="50%" y="90%" fill="#fff" font-size="10" text-anchor="middle" font-family="'Space Grotesk'">VALORANT BOOTH JPN</text>
+              </svg>
+              <div class="gallery-overlay">
+                <span class="gallery-zoom-icon">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gallery Item 3 -->
+          <div class="gallery-card reveal reveal-up" style="transition-delay: 0.2s;">
+            <div class="gallery-img-container">
+              <svg viewBox="0 0 300 200" class="gallery-svg" data-large-svg="svg-3" aria-label="チームのゲーミングデバイス">
+                <rect width="100%" height="100%" fill="#0a0a0a"/>
+                <circle cx="150" cy="100" r="80" fill="url(#gradient-card-1)"/>
+                <path d="M80 100 H220" stroke="#00f3ff" stroke-width="2" opacity="0.2"/>
+                <text x="50%" y="90%" fill="#fff" font-size="10" text-anchor="middle" font-family="'Space Grotesk'">AstraNova HQ TRAINING CENTRE</text>
+              </svg>
+              <div class="gallery-overlay">
+                <span class="gallery-zoom-icon">+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Sponsors Section -->
+    <section id="sponsors" class="sponsors-section">
+      <div class="section-container">
+        <div class="section-header reveal reveal-up">
+          <span class="section-subtitle">PARTNERS</span>
+          <h2 class="section-title">OFFICIAL SPONSORS</h2>
+        </div>
+
+        <div class="sponsors-grid reveal reveal-up">
+          <div class="sponsor-logo-box">
+            <svg class="sponsor-logo-svg" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 15H40V35H20V15Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M30 10V40" stroke="currentColor" stroke-width="2"/>
+              <text x="60" y="32" fill="currentColor" font-family="'Space Grotesk'" font-weight="bold" font-size="16">CHIPTECH</text>
+            </svg>
+          </div>
+          <div class="sponsor-logo-box">
+            <svg class="sponsor-logo-svg" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 25 C40 10, 60 40, 80 25" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <text x="90" y="32" fill="currentColor" font-family="'Space Grotesk'" font-weight="bold" font-size="16">FLOW</text>
+            </svg>
+          </div>
+          <div class="sponsor-logo-box">
+            <svg class="sponsor-logo-svg" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="30,10 50,40 10,40" stroke="currentColor" stroke-width="2" fill="none"/>
+              <text x="65" y="32" fill="currentColor" font-family="'Space Grotesk'" font-weight="bold" font-size="16">APEX-NET</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="sponsors-cta reveal reveal-up">
+          <p class="cta-message">AstraNovaでは、未来の競技シーンを共に形作るパートナー企業様を募集しております。</p>
+          <a href="#contact" class="btn btn-outline-glow">BECOME A SPONSOR</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Contact Section (Join Recruitment Form) -->
+    <section id="contact" class="contact-section">
+      <div class="section-container">
+        <div class="grid-layout">
+          <div class="col-left reveal reveal-up">
+            <span class="section-subtitle">JOIN THE ROSTER</span>
+            <h2 class="section-title">APPLY FOR<br>AstraNova</h2>
+            <p class="contact-desc">
+              AstraNova所属選手・クリエイター・コーチ・運営スタッフの応募はこちらのフォームから申請してください。Bot検知にはCloudflare Turnstileを使用しています。
+            </p>
+          </div>
+
+          <div class="col-right reveal reveal-up">
+            <!-- Application Form Block -->
+            <form id="contact-form" class="contact-form" novalidate>
+              
+              <div class="form-group">
+                <input type="text" id="name" name="name" class="form-input" placeholder=" " required maxlength="100">
+                <label for="name" class="form-label">お名前 *</label>
+                <span class="form-error-msg" id="name-error"></span>
+              </div>
+
+              <div class="form-group">
+                <input type="email" id="email" name="email" class="form-input" placeholder=" " required>
+                <label for="email" class="form-label">メールアドレス *</label>
+                <span class="form-error-msg" id="email-error"></span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <input type="number" id="age" name="age" class="form-input" placeholder=" " min="12" max="100" required>
+                  <label for="age" class="form-label">年齢 *</label>
+                  <span class="form-error-msg" id="age-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <input type="text" id="discord" name="discord" class="form-input" placeholder=" " required>
+                  <label for="discord" class="form-label">Discord ユーザー名 *</label>
+                  <span class="form-error-msg" id="discord-error"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <select id="role" name="role" class="form-input select-input" required>
+                  <option value="" disabled selected hidden></option>
+                  <option value="apex_player">APEX LEGENDS 部門 (選手)</option>
+                  <option value="valorant_player">VALORANT 部門 (選手)</option>
+                  <option value="streamer">ストリーマー部門</option>
+                  <option value="coach_analyst">コーチ・アナリスト</option>
+                  <option value="staff_creator">クリエイター・運営スタッフ</option>
+                </select>
+                <label for="role" class="form-label">希望部門・職種 *</label>
+                <span class="form-error-msg" id="role-error"></span>
+              </div>
+
+              <div class="form-group">
+                <input type="url" id="portfolio" name="portfolio" class="form-input" placeholder=" ">
+                <label for="portfolio" class="form-label">SNS・ポートフォリオ・実績動画のURL</label>
+                <span class="form-error-msg" id="portfolio-error"></span>
+              </div>
+
+              <div class="form-group">
+                <textarea id="message" name="message" class="form-input" rows="6" placeholder=" " required maxlength="2000"></textarea>
+                <label for="message" class="form-label">自己PR・競技実績・意気込み *</label>
+                <span class="form-error-msg" id="message-error"></span>
+              </div>
+
+              <!-- Cloudflare Turnstile Widget -->
+              <div class="turnstile-wrapper">
+                <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark" id="turnstile-widget"></div>
+                <span class="form-error-msg" id="turnstile-error"></span>
+              </div>
+
+              <!-- Form State Alerts -->
+              <div id="form-alert" class="form-alert" role="alert" aria-live="polite"></div>
+
+              <button type="submit" id="form-submit-btn" class="btn btn-primary btn-full">
+                <span class="btn-text">APPLY NOW</span>
+                <span class="btn-loader"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 13. Image Lightbox Modal -->
+  <div id="lightbox-modal" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="画像プレビュー">
+    <button class="lightbox-close" id="lightbox-close" aria-label="プレビューを閉じる">&times;</button>
+    <div class="lightbox-content-wrapper">
+      <div id="lightbox-img-placeholder" class="lightbox-img-placeholder"></div>
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- 14. Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <svg viewBox="0 0 100 100" class="logo-svg footer-logo">
+          <path d="M50 15L50 85" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M15 50L85 50" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <path d="M28 28L72 72" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M28 72L72 28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="10" fill="currentColor"/>
+        </svg>
+        <span class="brand-name">AstraNova</span>
+      </div>
+
+      <div class="footer-social-row">
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="X">
+          <svg class="footer-social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span>X (Twitter)</span>
+        </a>
+        <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Twitch">
+          <svg class="footer-social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+          <span>Twitch</span>
+        </a>
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="YouTube">
+          <svg class="footer-social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.388.507 9.388.507s7.517 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span>YouTube</span>
+        </a>
+        <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="TikTok">
+          <svg class="footer-social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.97 1.15 2.37 1.86 3.86 2.06v3.91a8.4 8.4 0 0 1-5.17-1.89c-.06 2.5-.04 5-.06 7.5.03 2.19-.53 4.41-1.74 6.22-1.63 2.44-4.52 3.89-7.48 3.87-2.6-.02-5.13-1.25-6.73-3.28-1.77-2.25-2.28-5.32-1.39-8 1.05-3.07 4-5.28 7.24-5.24 1.15-.02 2.3.26 3.32.79V11.2a4.42 4.42 0 0 0-2.45-.73c-2.45-.02-4.63 1.95-4.66 4.4-.04 2.8 2.65 5.06 5.4 4.54 1.76-.3 3.16-1.79 3.39-3.56.07-2.73.04-5.46.06-8.19.01-2.58.01-5.16.02-7.74z"/></svg>
+          <span>TikTok</span>
+        </a>
+        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Discord">
+          <svg class="footer-social-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.156 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.156 2.418z"/></svg>
+          <span>Discord</span>
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="copyright">© 2026 AstraNova. ALL RIGHTS RESERVED. (PORTFOLIO DEMO)</p>
+        <p class="disclaimer">本サイトはWeb制作ポートフォリオ用のデモサイトです。実在のeスポーツチーム等とは一切関係ありません。</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 15. Back to Top Button -->
+  <button id="back-to-top" class="back-to-top" aria-label="ページトップへ戻る">
+    <svg viewBox="0 0 24 24" class="back-to-top-icon">
+      <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+    </svg>
+  </button>
+
+  <!-- Main Interaction Script -->
+  <script src="script.js"></script>
+</body>
+</html>
